@@ -1,4 +1,6 @@
-import Geolocation from "./Geolocation";
+import checkGPS from "./checkGPS";
+import sendGPS from "./sendGPS";
+import getGeolocation from "./getGeolocation";
 
 export default class Widget {
   constructor() {
@@ -28,28 +30,45 @@ export default class Widget {
     });
   }
 
+  init() {
+    getGeolocation()
+      .then((position) => {
+        this.location = {
+          latitude: position.coords.latitude.toFixed(5),
+          longitude: position.coords.longitude.toFixed(5),
+        };
+      });
+  }
+
   addListener() {
     this.container.addEventListener("submit", (evt) => {
-      const geo = new Geolocation();
       evt.preventDefault();
       const { target } = evt;
+
       if (target.classList.contains("news__form")) {
         this.messages.push(this.inputMessage.value);
-        if (geo.sendResult() || this.location) {
-          if (geo.sendResult()) {
-            this.location = geo.getLocationValue();
-          }
-          this.renderMessagesList();
-          this.inputMessage.value = "";
-        } else {
-          Widget.renderElement(this.popover);
-        }
+        getGeolocation()
+          .then((position) => {
+            this.location = {
+              latitude: position.coords.latitude.toFixed(5),
+              longitude: position.coords.longitude.toFixed(5),
+            };
+            if (this.location) {
+              this.renderMessagesList();
+              this.inputMessage.value = "";
+            }
+          })
+          .catch(() => {
+            Widget.renderElement(this.popover);
+          });
       }
+
       if (target.classList.contains("popover__form")) {
-        // this.inputPopover.value = "57.62607, 39.88447";
+        this.inputPopover.value = "57.62607, 39.88447";
         const { value } = this.inputPopover;
-        if (geo.sendGPS(value)) {
-          this.location = geo.getLocationValue();
+
+        if (checkGPS(value)) {
+          this.location = sendGPS(value);
           Widget.hiddenElement(this.popover);
           this.renderMessagesList();
           this.inputMessage.value = "";
