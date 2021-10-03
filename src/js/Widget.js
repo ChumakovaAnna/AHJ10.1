@@ -30,6 +30,7 @@ export default class Widget {
     });
   }
 
+  /** Если потребуется узнавать местоположение один раз при открытии страницы */
   init() {
     getGeolocation()
       .then((position) => {
@@ -37,11 +38,9 @@ export default class Widget {
           latitude: position.coords.latitude.toFixed(5),
           longitude: position.coords.longitude.toFixed(5),
         };
-        console.log(this.location);
       })
       .catch((e) => {
-        console.log(e);
-        console.log(this.location);
+        console.error(e);
       });
   }
 
@@ -58,14 +57,12 @@ export default class Widget {
               latitude: position.coords.latitude.toFixed(5),
               longitude: position.coords.longitude.toFixed(5),
             };
-            console.log(this.location);
             if (this.location) {
               this.renderMessagesList();
               this.inputMessage.value = "";
             }
           })
           .catch(() => {
-            console.log(this.location);
             Widget.renderElement(this.popover);
           });
       }
