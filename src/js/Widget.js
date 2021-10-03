@@ -37,6 +37,11 @@ export default class Widget {
           latitude: position.coords.latitude.toFixed(5),
           longitude: position.coords.longitude.toFixed(5),
         };
+        console.log(this.location);
+      })
+      .catch((e) => {
+        console.log(e);
+        console.log(this.location);
       });
   }
 
