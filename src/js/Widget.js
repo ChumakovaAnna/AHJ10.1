@@ -58,12 +58,14 @@ export default class Widget {
               latitude: position.coords.latitude.toFixed(5),
               longitude: position.coords.longitude.toFixed(5),
             };
+            console.log(this.location);
             if (this.location) {
               this.renderMessagesList();
               this.inputMessage.value = "";
             }
           })
           .catch(() => {
+            console.log(this.location);
             Widget.renderElement(this.popover);
           });
       }

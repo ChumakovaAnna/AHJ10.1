@@ -1,5 +1,5 @@
 import Widget from "./Widget";
 
 const widget = new Widget();
-widget.init();
+// widget.init();
 widget.addListener();
